@@ -1,7 +1,7 @@
 .throws{
   position: relative;
   background-color: aliceblue;
-   width: 10%;
+   width: 10% !important;
   /*margin: 50px; */
 }
 .tablerows{

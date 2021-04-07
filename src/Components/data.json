@@ -2,7 +2,7 @@
     {
     "Name": "Planning",
     "StartTime": "01/04/2021",
-    "EndTime": "05/04/2021",
+    "EndTime": "15/04/2021",
     "Status": "Finished"
     },
     {
@@ -14,7 +14,7 @@
     {
     "Name": "Procurement",
     "StartTime": "06/04/2021",
-    "EndTime": "20/04/2021",
+    "EndTime": "10/04/2021",
     "Status": "YetToStart"
     }
 ]
