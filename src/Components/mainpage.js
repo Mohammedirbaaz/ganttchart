@@ -1,12 +1,43 @@
 import React,{Component} from 'react';
-import data from  './data.json';
+// import data from  './data.json';
 
 let starts=0;
 let ends=0;
 let remains=0;
-let total=0;
-let finds=0;
+let oldstart;
+let oldend;
+let oldstatus;
+let newstart;
+let newend;
+let newstatus;
+let arr=[];
 
+let finds=0;
+let currentid;
+
+var JsonData={};
+
+
+let data=[
+    {
+    "Name": "Planning",
+    "StartTime": "04/04/2021",
+    "EndTime": "15/04/2021",
+    "Status": "Finished"
+    },
+    {
+    "Name": "Preparation",
+    "StartTime": "13/04/2021",
+    "EndTime": "20/04/2021",
+    "Status": "InProgress"
+    },
+    {
+    "Name": "Procurement",
+    "StartTime": "01/04/2021",
+    "EndTime": "19/04/2021",
+    "Status": "YetToStart"
+    }
+]
 
 class mainpage extends Component{
     constructor(props){
@@ -110,10 +141,92 @@ class mainpage extends Component{
             ids.style.width=finder1+"%";
         },1000)
     }
-    changedetails=(idcss)=>{
+    changedetails=(idcss,starto,endo,statuso,index)=>{
+        currentid=index;
         let findview=document.getElementById("cardviewid");
         findview.style.visibility="visible";
 
+        
+        let startold=document.getElementById("startidold");
+        startold.innerHTML=starto;
+        oldstart=starto;
+
+        
+
+
+
+
+        let endold=document.getElementById("endidold");
+        endold.innerHTML=endo;
+        oldend=endo;
+
+
+
+
+        let statusold=document.getElementById("statusoldid");
+        statusold.innerHTML=statuso;
+        oldstatus=statuso;
+
+
+        
+
+    }
+    saveinfo=(idd)=>{
+        this.state={
+            newtask:[]
+        }
+        
+        let startinput=document.getElementById("startid");
+        newstart=startinput.value;
+        console.log("newstart "+newstart);
+        let endinput=document.getElementById("endid");
+        newend=endinput.value;
+        console.log("newend "+newend);
+        let status=document.getElementById("statusids");
+        newstatus=status.value;
+        
+
+        for(let i=0;i<data.length;i++){
+
+            if(idd===i){
+                alert("matched on "+i);
+                if(oldstart===data[i].StartTime){
+                    let datess=new Date(newstart);
+                    let daten=datess.getUTCDate();
+                    let month=datess.getMonth();
+                    month++;
+                    let years=datess.getUTCFullYear();
+                    
+                    let datesnew=new Date();
+                    datesnew.toString();
+                    datesnew="0"+daten+"/0"+month+"/"+years;
+                    console.log(datesnew);
+
+
+
+
+                    //end date
+                    let datessold=new Date(newend);
+                    let daten2=datessold.getUTCDate();
+                    let month2=datessold.getMonth();
+                    month2++;
+                    let years2=datessold.getUTCFullYear();
+                    
+                    let datesnew2=new Date();
+                    datesnew2.toString();
+                    datesnew2=daten2+"/0"+month2+"/"+years2;
+                    console.log(datesnew2);
+
+                    
+                }
+                
+            }else{
+                
+            }
+        }
+        this.setState({
+            tasks:this.state.newtask
+        })
     }
 
     render(){ 
@@ -134,12 +247,12 @@ class mainpage extends Component{
                 {this.state.tasks.map((temp,index)=>
                     <tr key={index}>
                         <td>{temp.Name}</td>
-                        <td ><div  id={"throwsid1"+index} > {this.checkstartdate(temp.StartTime)===1 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid1"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid1"+index)}}>Change</button></span> </>} </div></td>
-                        <td ><div id={"throwsid2"+index}> {this.checkstartdate(temp.StartTime)===2 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid2"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid2"+index)}}>Change</button></span></>}</div></td>
-                        <td ><div id={"throwsid3"+index}> {this.checkstartdate(temp.StartTime)===3 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid3"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid3"+index)}}>Change</button></span></>}</div></td>
-                        <td > <div id={"throwsid4"+index}> {this.checkstartdate(temp.StartTime)===4 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid4"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid4"+index)}}>Change</button></span></>}</div></td>
-                        <td >< div id={"throwsid5"+index}> {this.checkstartdate(temp.StartTime)===5 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid5"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid5"+index)}}>Change</button></span></>}</div></td>
-                        <td ><div id={"throwsid6"+index}> {this.checkstartdate(temp.StartTime)===6 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid6"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid6"+index)}}>Change</button></span></>}</div></td>
+                        <td ><div  id={"throwsid1"+index} > {this.checkstartdate(temp.StartTime)===1 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid1"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid1"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span> </>} </div></td>
+                        <td ><div id={"throwsid2"+index}> {this.checkstartdate(temp.StartTime)===2 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid2"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid2"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
+                        <td ><div id={"throwsid3"+index}> {this.checkstartdate(temp.StartTime)===3 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid3"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid3"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
+                        <td > <div id={"throwsid4"+index}> {this.checkstartdate(temp.StartTime)===4 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid4"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid4"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
+                        <td >< div id={"throwsid5"+index}> {this.checkstartdate(temp.StartTime)===5 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid5"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid5"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
+                        <td ><div id={"throwsid6"+index}> {this.checkstartdate(temp.StartTime)===6 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid6"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid6"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
                     
                     </tr>
                 )}
@@ -148,18 +261,40 @@ class mainpage extends Component{
             </table>
 
             <div className="cardview" id="cardviewid">
-                    <p className="headers">Change Details</p>
+                    <div className="headers">
+                    <p >Change Details</p>
+
+                    </div>
                     <table>
                         <tr>
-                            <th>Start</th>
-                            <td id="startid"><input type="date"/></td>
+                            <th>Start:</th>
+                            <td ><input type="date" id="startid"/></td>
+                            <th>Old:</th>
+                            <td ><p id="startidold"></p></td>
+
                         </tr>
                         <tr>
                             <th>End</th>
+                            <td ><input type="date" id="endid"/></td>
+                            <th>Old:</th>
+                            <td ><p id="endidold"></p></td>
+
                             
                         </tr>
                         <tr>
                         <th>Status</th>
+                        <td ><input type="text" id="statusids"/></td>
+                        <th>Old:</th>
+                        <td ><p id="statusoldid"></p></td>
+
+                        <tr>
+                            <th></th>
+                            <td ></td>
+                            <th></th>
+
+                            <td><button onClick={()=>{this.saveinfo(currentid)}}>Save</button></td>
+                        </tr>
+
                         </tr>
                     </table>
             </div>
