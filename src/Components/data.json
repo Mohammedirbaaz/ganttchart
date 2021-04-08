@@ -1,20 +1,20 @@
 [
     {
     "Name": "Planning",
-    "StartTime": "03/04/2021",
-    "EndTime": "20/04/2021",
+    "StartTime": "04/04/2021",
+    "EndTime": "15/04/2021",
     "Status": "Finished"
     },
     {
     "Name": "Preparation",
-    "StartTime": "05/04/2021",
-    "EndTime": "06/04/2021",
+    "StartTime": "13/04/2021",
+    "EndTime": "20/04/2021",
     "Status": "InProgress"
     },
     {
     "Name": "Procurement",
-    "StartTime": "05/04/2021",
-    "EndTime": "29/04/2021",
+    "StartTime": "01/04/2021",
+    "EndTime": "19/04/2021",
     "Status": "YetToStart"
     }
 ]
