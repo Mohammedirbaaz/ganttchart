@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
-// import data from  './data.json';
+import axios from 'axios';
+import data from  './data.json';
+
 
 let starts=0;
 let ends=0;
@@ -18,26 +20,26 @@ let currentid;
 var JsonData={};
 
 
-let data=[
-    {
-    "Name": "Planning",
-    "StartTime": "04/04/2021",
-    "EndTime": "15/04/2021",
-    "Status": "Finished"
-    },
-    {
-    "Name": "Preparation",
-    "StartTime": "13/04/2021",
-    "EndTime": "20/04/2021",
-    "Status": "InProgress"
-    },
-    {
-    "Name": "Procurement",
-    "StartTime": "01/04/2021",
-    "EndTime": "19/04/2021",
-    "Status": "YetToStart"
-    }
-]
+// let data=[
+//     {
+//     "Name": "Planning",
+//     "StartTime": "04/04/2021",
+//     "EndTime": "15/04/2021",
+//     "Status": "Finished"
+//     },
+//     {
+//     "Name": "Preparation",
+//     "StartTime": "13/04/2021",
+//     "EndTime": "20/04/2021",
+//     "Status": "InProgress"
+//     },
+//     {
+//     "Name": "Procurement",
+//     "StartTime": "01/04/2021",
+//     "EndTime": "19/04/2021",
+//     "Status": "YetToStart"
+//     }
+// ]
 
 class mainpage extends Component{
     constructor(props){
@@ -216,6 +218,20 @@ class mainpage extends Component{
                     datesnew2.toString();
                     datesnew2=daten2+"/0"+month2+"/"+years2;
                     console.log(datesnew2);
+                    
+                    const objsss={
+                        datesnew:datesnew,
+                        datesnew2:datesnew2,
+                        newstatus:newstatus,
+                        datestsold:data[i].StartTime,
+                        dateedsold:data[i].EndTime,
+                        statusold:data[i].Status,
+                    }
+
+                    axios.post('http://localhost:5000/changedata',objsss).then(res=>{
+                        console.log(res);
+                    })
+                    
 
                     
                 }
@@ -224,9 +240,7 @@ class mainpage extends Component{
                 
             }
         }
-        this.setState({
-            tasks:this.state.newtask
-        })
+        
     }
 
     render(){ 
