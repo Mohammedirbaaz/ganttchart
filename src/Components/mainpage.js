@@ -129,16 +129,17 @@ class mainpage extends Component{
             else if(start==="05" || start==="10" || start==="15" || start==="20" || start==="25" || start==="30"){
                 finds=start-1;
             }
-            else if(start==1 || start==6 || start==11 || start==16 || start==21 || start==26){
-                finds=0;
-            }
             frists=start-frists;
             finds=frists;
+            if(start==="01" || start==6 || start==11 || start==16 || start==21 || start==26){
+                finds=0;
+            }
+            
                 
             finds=finds*20;
             ids.style.marginLeft=finds+"%";
 
-            let finder1=rem/4.9;
+            let finder1=rem/5;
             finder1=finder1*100;
             ids.style.width=finder1+"%";
         },1000)

@@ -57,7 +57,7 @@ app.post('/changedata',(req,res)=>{
             obj=JSON.parse(datae);
             console.log(datestsold+" "+obj[0].StartTime);
             for(let i=0;i<obj.length;i++){
-                if(datestsold===obj[i].StartTime){
+                if(datestsold===obj[i].StartTime && dateedsold===obj[i].EndTime && statusold==obj[i].Status){
 
                     obj[i].StartTime=datesnew;
                     obj[i].EndTime=datesnew2;
