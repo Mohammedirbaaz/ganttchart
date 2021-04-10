@@ -3,13 +3,18 @@
   background-color: aliceblue;
    width: 10% !important;
   /*margin: 50px; */
+  overflow: auto;
 }
 .tablerows{
   position: relative;
   width: 100%;
+  overflow: auto ;
 }
 .status{
   visibility: hidden;
+  background-color: rgb(161, 156, 156);
+  color: rgb(0, 0, 0);
+
 }
 .cardview{
   position: absolute;
@@ -29,6 +34,7 @@
   position: relative;
   top: -8%;
   padding:1px;
+  width: 100%;
   color: aliceblue;
   text-align:center;
   background-color: darkslategrey;

@@ -9,10 +9,12 @@ const bodyParser = require('body-parser');
 const app=express();
 const port=process.env.PORT || 5000;
 
-app.use(cors({origin:"http://localhost:3000"}));
+app.use(cors({origin:"https://ganttchart.netlify.app"}));
+
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header("Access-Control-Allow-Origin","https://ganttchart.netlify.app")
     next()
 });
 app.use(bodyParser.json());
@@ -26,18 +28,24 @@ const newobjs={
     EndTime: "15/04/2021",
     Status: "Finished"
 }
-// fss.writeFile('./data2.json',JSON.stringify(newobjs),err=>{
-//     if(err){
-//         console.log(err);
-//     }else{
-//         console.log("success");
-//     }
-// })
 
+app.get('/senddata',(req,res)=>{
+    console.log("dfdf");
+    let obj=[{}];
+    fss.readFile('./data.json','utf-8',(err,datae)=>{
+        if(err){
+            console.log(err);
+        }
+        try{
+            obj=JSON.parse(datae);
+            res.send(obj);
 
+        }catch(err){
+            console.log(err);
+        }
+    })
+})
 
-
-// router.route('/changedata').get((req,res)=>{
 app.post('/changedata',(req,res)=>{
 
 
@@ -49,13 +57,13 @@ app.post('/changedata',(req,res)=>{
     const statusold=req.body.statusold;
 
     let obj=[{}];
-    fss.readFile('../src/Components/data.json','utf-8',(err,datae)=>{
+    fss.readFile('./data.json','utf-8',(err,datae)=>{
         if(err){
             console.log(err);
         }
         try{
             obj=JSON.parse(datae);
-            console.log(datestsold+" "+obj[0].StartTime);
+
             for(let i=0;i<obj.length;i++){
                 if(datestsold===obj[i].StartTime && dateedsold===obj[i].EndTime && statusold==obj[i].Status){
 
@@ -66,23 +74,16 @@ app.post('/changedata',(req,res)=>{
                     
 
 
-                    fss.writeFile('../src/Components/data.json',JSON.stringify(obj),err=>{
+                    fss.writeFile('./data.json',JSON.stringify(obj),err=>{
                         if(err){
                             console.log(err);
                         }else{
-                            res.send("lol bhai");
+                            res.send("successfully Changed");
                         }
                     })
                 }
             }
 
-
-
-
-            
-            
-
-    
         }catch(err){
             console.log(err);
         }
@@ -91,13 +92,6 @@ app.post('/changedata',(req,res)=>{
 
 
 });
-
-
-
-
-
-
-
-
-
-app.listen(port,()=>{console.log(`server is running on port:${port}`);});
+app.listen(port,()=>{
+    console.log(`server is running on port:${port}`);
+});

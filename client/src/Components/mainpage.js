@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import axios from 'axios';
-import data from  './data.json';
+// import data from  './data.json';
 
 
 let starts=0;
@@ -18,6 +18,7 @@ let finds=0;
 let currentid;
 
 var JsonData={};
+let lens=[{}];
 
 
 // let data=[
@@ -45,8 +46,11 @@ class mainpage extends Component{
     constructor(props){
         super(props);
         this.state={
-            tasks:data,
+            data:[]
         }
+    }
+    componentDidMount(){
+        axios.get("https://ganttchartapp.herokuapp.com/senddata").then((res)=>{this.setState({data:res.data});lens=this.state.data;console.log(this.state.data);});
     }
     checkstartdate(strtdate){
         let dates = strtdate;
@@ -108,34 +112,41 @@ class mainpage extends Component{
             ids.style.position="relative";
             ids.style.backgroundColor="blue";
             ids.style.width="10%";
-            ids.style.height="10px";
+            ids.style.height="22px";
             ids.style.marginTop="0.5%";
+
             let frists=0;
             if((start>1 && start<5)){
                 frists=1;
+                
             }
             else if(start>6 && start<10){
                  frists=6; 
+                 
             }
             else if(start>11 && start<15){
                 frists=11; 
+                
            }
             else if(start>16 && start<20){
                 frists=16;  
+                
             }
             else if(start>21 && start<25){
                 frists=21;  
-            }
-            else if(start==="05" || start==="10" || start==="15" || start==="20" || start==="25" || start==="30"){
-                finds=start-1;
+                
             }
             frists=start-frists;
             finds=frists;
+             if(start==="05" || start==="10" || start==="15" || start==="20" || start==="25" || start==="30"){
+                finds=4;
+
+            }
             if(start==="01" || start==6 || start==11 || start==16 || start==21 || start==26){
                 finds=0;
             }
             
-                
+            console.log("idss of "+idss+" "+finds)
             finds=finds*20;
             ids.style.marginLeft=finds+"%";
 
@@ -181,19 +192,24 @@ class mainpage extends Component{
         
         let startinput=document.getElementById("startid");
         newstart=startinput.value;
-        console.log("newstart "+newstart);
+        // console.log("newstart "+newstart);
         let endinput=document.getElementById("endid");
         newend=endinput.value;
-        console.log("newend "+newend);
+        // console.log("newend "+newend);
         let status=document.getElementById("statusids");
         newstatus=status.value;
+
+        // console.log(lens.length);
+        // let lens=this.state.data[0];
+        // alert(lens);
+        // console.log(this.state.data[0]);
         
 
-        for(let i=0;i<data.length;i++){
+        for(let i=0;i<lens.length;i++){
 
             if(idd===i){
-                alert("matched on "+i);
-                if(oldstart===data[i].StartTime){
+       
+                if(oldstart===lens[i].StartTime){
                     let datess=new Date(newstart);
                     let daten=datess.getUTCDate();
                     let month=datess.getMonth();
@@ -202,8 +218,13 @@ class mainpage extends Component{
                     
                     let datesnew=new Date();
                     datesnew.toString();
-                    datesnew="0"+daten+"/0"+month+"/"+years;
-                    console.log(datesnew);
+                    let datennnn="";
+                    datennnn=daten.toString();
+                    if(datennnn.length===1){
+                        datennnn="0"+datennnn;
+                    }
+                    datesnew=datennnn+"/0"+month+"/"+years;
+                    // console.log(datesnew);
 
 
 
@@ -214,26 +235,29 @@ class mainpage extends Component{
                     let month2=datessold.getMonth();
                     month2++;
                     let years2=datessold.getUTCFullYear();
-                    
                     let datesnew2=new Date();
                     datesnew2.toString();
-                    datesnew2=daten2+"/0"+month2+"/"+years2;
-                    console.log(datesnew2);
+                    datennnn="";
+                    datennnn=daten2.toString();
+   
+                    if(datennnn.length===1){
+                        datennnn="0"+datennnn;
+                    }
+                    datesnew2=datennnn+"/0"+month2+"/"+years2;
+                    // console.log(datesnew2);
                     
                     const objsss={
                         datesnew:datesnew,
                         datesnew2:datesnew2,
                         newstatus:newstatus,
-                        datestsold:data[i].StartTime,
-                        dateedsold:data[i].EndTime,
-                        statusold:data[i].Status,
+                        datestsold:lens[i].StartTime,
+                        dateedsold:lens[i].EndTime,
+                        statusold:lens[i].Status,
                     }
 
-                    axios.post('http://localhost:5000/changedata',objsss).then(res=>{
-                        console.log(res);
+                    axios.post('https://ganttchartapp.herokuapp.com/changedata',objsss).then(res=>{
+                        alert(res.data);
                     })
-                    
-
                     
                 }
                 
@@ -243,8 +267,10 @@ class mainpage extends Component{
         }
         
     }
+    
 
     render(){ 
+        
         return(
         <div >
             
@@ -259,23 +285,24 @@ class mainpage extends Component{
                  <th className="throws"  >26-31 </th>
                 </tr>
 
-                {this.state.tasks.map((temp,index)=>
+                {this.state.data.map((temp,index)=>
                     <tr key={index}>
                         <td>{temp.Name}</td>
-                        <td ><div  id={"throwsid1"+index} > {this.checkstartdate(temp.StartTime)===1 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid1"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid1"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span> </>} </div></td>
-                        <td ><div id={"throwsid2"+index}> {this.checkstartdate(temp.StartTime)===2 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid2"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid2"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
-                        <td ><div id={"throwsid3"+index}> {this.checkstartdate(temp.StartTime)===3 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid3"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid3"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
-                        <td > <div id={"throwsid4"+index}> {this.checkstartdate(temp.StartTime)===4 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid4"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid4"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
-                        <td >< div id={"throwsid5"+index}> {this.checkstartdate(temp.StartTime)===5 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid5"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid5"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
-                        <td ><div id={"throwsid6"+index}> {this.checkstartdate(temp.StartTime)===6 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid6"+index,starts,remains,index)} <span className="status" id={"statusid"+index}>{temp.Status}<button onClick={()=>{this.changedetails("throwsid6"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></span></>}</div></td>
+                        <td ><div  id={"throwsid1"+index} > {this.checkstartdate(temp.StartTime)===1 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid1"+index,starts,remains,index)} <p  className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid1"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p> </>} </div></td>
+                        <td ><div id={"throwsid2"+index}> {this.checkstartdate(temp.StartTime)===2 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid2"+index,starts,remains,index)} <p className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid2"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p></>}</div></td>
+                        <td ><div id={"throwsid3"+index}> {this.checkstartdate(temp.StartTime)===3 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid3"+index,starts,remains,index)} <p className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid3"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p></>}</div></td>
+                        <td > <div id={"throwsid4"+index}> {this.checkstartdate(temp.StartTime)===4 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid4"+index,starts,remains,index)} <p className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid4"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p></>}</div></td>
+                        <td >< div id={"throwsid5"+index}> {this.checkstartdate(temp.StartTime)===5 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid5"+index,starts,remains,index)} <p className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid5"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p></>}</div></td>
+                        <td ><div id={"throwsid6"+index}> {this.checkstartdate(temp.StartTime)===6 && <>{this.checkenddate(temp.EndTime)} {this.changebg("throwsid6"+index,starts,remains,index)} <p className="status" id={"statusid"+index}><b style={{marginRight:"10%",marginLeft:"10%"}}>{temp.Status}</b><button onClick={()=>{this.changedetails("throwsid6"+index,temp.StartTime,temp.EndTime,temp.Status,index)}}>Change</button></p></>}</div></td>
                     
                     </tr>
                 )}
+                {/* {alert(this.state.data[0].Name)} */}
 
             
             </table>
 
-            <div className="cardview" id="cardviewid">
+            <div className="cardview" id="cardviewid" >
                     <div className="headers">
                     <p >Change Details</p>
 
